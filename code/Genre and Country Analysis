@@ -1,0 +1,45 @@
+# 2. Genre and Country Analysis
+
+# Country analysis
+countries = (
+    df[df["country"] != "Unknown"]["country"]
+    .str.split(", ")
+    .explode()
+)
+
+top_countries = countries.value_counts().head(10)
+
+print("\n--- TOP 10 COUNTRIES ---")
+print(top_countries)
+
+sns.barplot(
+    x=top_countries.values,
+    y=top_countries.index,
+    hue=top_countries.index,
+    legend=False
+)
+
+plt.title("Top 10 Countries")
+plt.xlabel("Number of Titles")
+plt.ylabel("Country")
+plt.show()
+
+
+# Genre analysis
+genres = df["listed_in"].str.split(", ").explode()
+top_genres = genres.value_counts().head(10)
+
+print("\n--- TOP 10 GENRES ---")
+print(top_genres)
+
+sns.barplot(
+    x=top_genres.values,
+    y=top_genres.index,
+    hue=top_genres.index,
+    legend=False
+)
+
+plt.title("Top 10 Netflix Genres")
+plt.xlabel("Number of Titles")
+plt.ylabel("Genre")
+plt.show()
