@@ -1,0 +1,94 @@
+# 5. Movie Analysis
+
+# Select movies
+movies = df[df["type"] == "Movie"].copy()
+
+# Convert duration to numbers
+movies["duration_num"] = (
+    movies["duration"]
+    .str.extract(r"(\d+)")[0]
+    .astype(float)
+)
+
+print("\n--- MOVIE DURATION ---")
+
+print("Average:",
+      round(movies["duration_num"].mean(), 2),
+      "minutes")
+
+print("Median:",
+      round(movies["duration_num"].median(), 2),
+      "minutes")
+
+print("Shortest:",
+      movies["duration_num"].min(),
+      "minutes")
+
+print("Longest:",
+      movies["duration_num"].max(),
+      "minutes")
+
+
+# Duration graph
+sns.histplot(
+    movies["duration_num"],
+    bins=30,
+    kde=True
+)
+
+plt.title("Netflix Movie Duration")
+plt.xlabel("Duration in Minutes")
+plt.ylabel("Number of Movies")
+plt.show()
+
+
+# Top movie directors
+directors = (
+    movies["director"]
+    .dropna()
+    .value_counts()
+    .head(10)
+)
+
+print("\n--- TOP MOVIE DIRECTORS ---")
+print(directors)
+
+sns.barplot(
+    x=directors.values,
+    y=directors.index,
+    hue=directors.index,
+    legend=False
+)
+
+plt.title("Top 10 Movie Directors")
+plt.xlabel("Number of Movies")
+plt.ylabel("Director")
+plt.show()
+
+
+# Movie example
+example = df[
+    df["title"].str.contains(
+        "3 Idiots",
+        case=False,
+        na=False
+    )
+]
+
+print("\n--- 3 IDIOTS ---")
+
+if len(example) > 0:
+    print(
+        example[
+            [
+                "title",
+                "director",
+                "country",
+                "release_year",
+                "rating",
+                "duration"
+            ]
+        ].to_string(index=False)
+    )
+else:
+    print("3 Idiots not found.")
