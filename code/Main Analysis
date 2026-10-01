@@ -1,0 +1,46 @@
+# Netflix Content Analysis Using Python
+
+import kagglehub
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Download dataset
+path = kagglehub.dataset_download("shivamb/netflix-shows")
+
+# Load dataset
+df = pd.read_csv(os.path.join(path, "netflix_titles.csv"))
+
+print("Dataset Shape:", df.shape)
+print("\nColumns:")
+print(df.columns.tolist())
+  # 1. Main Analysis
+
+print("\n--- Missing Values ---")
+print(df.isnull().sum())
+
+print("\nDuplicates:", df.duplicated().sum())
+
+# Clean data
+df = df.drop_duplicates()
+df["country"] = df["country"].fillna("Unknown")
+df["rating"] = df["rating"].fillna(df["rating"].mode()[0])
+df = df.dropna(subset=["duration", "date_added"])
+
+print("\nAfter Cleaning:", df.shape)
+
+# Movies vs TV Shows
+content = df["type"].value_counts()
+
+print("\n--- MOVIES VS TV SHOWS ---")
+print(content)
+
+print("\nMost Common:", content.idxmax())
+
+# Graph
+sns.countplot(data=df, x="type", hue="type", legend=False)
+plt.title("Movies vs TV Shows")
+plt.xlabel("Content Type")
+plt.ylabel("Number of Titles")
+plt.show()
