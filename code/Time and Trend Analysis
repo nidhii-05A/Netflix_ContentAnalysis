@@ -1,0 +1,29 @@
+# 3. Time and Trend Analysis
+
+# Convert date_added into a date
+df["date_added"] = pd.to_datetime(df["date_added"], errors="coerce")
+
+# Get the year when content was added
+df["year_added"] = df["date_added"].dt.year
+
+# Count titles added in each year
+year_counts = df["year_added"].value_counts().sort_index()
+
+print("\n--- CONTENT ADDED EACH YEAR ---")
+print(year_counts)
+
+# Find the year with the most content
+peak_year = year_counts.idxmax()
+peak_count = year_counts.max()
+
+print("\nYear with Most Content Added:", peak_year)
+print("Number of Titles:", peak_count)
+
+# Line graph
+plt.figure(figsize=(10, 5))
+plt.plot(year_counts.index, year_counts.values, marker="o")
+
+plt.title("Netflix Content Added Each Year")
+plt.xlabel("Year")
+plt.ylabel("Number of Titles")
+plt.show()
